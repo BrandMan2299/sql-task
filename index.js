@@ -46,7 +46,10 @@ app.get('/songs/:id', (req, res) => {
         (err, results, fields) => {
             if (err) {
                 res.send(err.message);
-            };
+            }
+            else if (!results[0]) {
+                return res.send("no songs found");
+            }
             res.json(results);
         });
 });
@@ -62,7 +65,10 @@ app.get('/albums/:id', (req, res) => {
         (err, results, fields) => {
             if (err) {
                 res.send(err.message);
-            };
+            }
+            else if (!results[0]) {
+                return res.send("no albums found");
+            }
             res.json(results);
         });
 });
@@ -76,7 +82,10 @@ app.get('/artists/:id', (req, res) => {
         (err, results, fields) => {
             if (err) {
                 res.send(err.message);
-            };
+            }
+            else if (!results[0]) {
+                return res.send("no artist found");
+            }
             res.json(results);
         });
 });
@@ -90,13 +99,115 @@ app.get('/playlists/:id', (req, res) => {
         (err, results, fields) => {
             if (err) {
                 res.send(err.message);
-            };
+            }
+            else if (!results[0]) {
+                return res.send("no playlist found");
+            }
             res.json(results);
         });
 });
 
 app.post('/songs', (req, res) => {
     mysqlCon.query('INSERT INTO songs SET ?', req.body, (err, results, fields) => {
+        if (err) {
+            res.send(err.message);
+        };
+        res.json(results);
+    })
+})
+
+app.post('/albums', (req, res) => {
+    mysqlCon.query('INSERT INTO albums SET ?', req.body, (err, results, fields) => {
+        if (err) {
+            res.send(err.message);
+        };
+        res.json(results);
+    })
+})
+
+app.post('/artists', (req, res) => {
+    mysqlCon.query('INSERT INTO artists SET ?', req.body, (err, results, fields) => {
+        if (err) {
+            res.send(err.message);
+        };
+        res.json(results);
+    })
+})
+
+app.post('/playlists', (req, res) => {
+    mysqlCon.query('INSERT INTO playlists SET ?', req.body, (err, results, fields) => {
+        if (err) {
+            res.send(err.message);
+        };
+        res.json(results);
+    })
+})
+
+app.put('/songs/:id', (req, res) => {
+    mysqlCon.query(`UPDATE songs SET ? WHERE id = ${req.params.id}`, req.body, (err, results, fields) => {
+        if (err) {
+            res.send(err.message);
+        };
+        res.json(results);
+    })
+})
+
+app.put('/albums/:id', (req, res) => {
+    mysqlCon.query(`UPDATE albums SET ? WHERE id = ${req.params.id}`, req.body, (err, results, fields) => {
+        if (err) {
+            res.send(err.message);
+        };
+        res.json(results);
+    })
+})
+
+app.put('/artists/:id', (req, res) => {
+    mysqlCon.query(`UPDATE artists SET ? WHERE id = ${req.params.id}`, req.body, (err, results, fields) => {
+        if (err) {
+            res.send(err.message);
+        };
+        res.json(results);
+    })
+})
+
+app.put('/playlists/:id', (req, res) => {
+    mysqlCon.query(`UPDATE playlists SET ? WHERE id = ${req.params.id}`, req.body, (err, results, fields) => {
+        if (err) {
+            res.send(err.message);
+        };
+        res.json(results);
+    })
+})
+
+app.delete('/songs/:id', (req, res) => {
+    mysqlCon.query(`DELETE FROM songs WHERE id = ${req.params.id}`, (err, results, fields) => {
+        if (err) {
+            res.send(err.message);
+        };
+        res.json(results);
+    })
+})
+
+app.delete('/albums/:id', (req, res) => {
+    mysqlCon.query(`DELETE FROM albums WHERE id = ${req.params.id}`, (err, results, fields) => {
+        if (err) {
+            res.send(err.message);
+        };
+        res.json(results);
+    })
+})
+
+app.delete('/artists/:id', (req, res) => {
+    mysqlCon.query(`DELETE FROM artists WHERE id = ${req.params.id}`, (err, results, fields) => {
+        if (err) {
+            res.send(err.message);
+        };
+        res.json(results);
+    })
+})
+
+app.delete('/playlists/:id', (req, res) => {
+    mysqlCon.query(`DELETE FROM playlists WHERE id = ${req.params.id}`, (err, results, fields) => {
         if (err) {
             res.send(err.message);
         };
