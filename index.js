@@ -18,14 +18,81 @@ mysqlCon.connect(err => {
     console.log("Connected!");
 });
 
-app.get('/songs', (req, res) => {
+app.get('/top_songs', (req, res) => {
     mysqlCon.query(`
-        SELECT s.id, s.title, s.length, s.track_number, s.created_at, s.uploaded_at, al.name AS "Album Name", ar.name AS "Artist Name"
-        FROM songs s
-        JOIN albums al
-        ON al.id = s.album_id
-        JOIN artists ar
-        ON ar.id = s.artist_id;`,
+    SELECT s.id, s.title, s.length, s.track_number, s.created_at, s.uploaded_at, al.name AS album_name, ar.name AS artist_name,sum(si.play_count) AS times_played
+    FROM songs s
+    JOIN albums al
+    ON al.id = s.album_id
+    JOIN artists ar
+    ON ar.id = s.artist_id
+    JOIN song_interactions si
+    on si.song_id = s.id
+    group by si.song_id
+    order by sum(play_count) desc
+    limit 20`,
+        (err, results, fields) => {
+            if (err) {
+                res.send(err.message);
+            };
+            res.json(results);
+        }
+    );
+});
+
+app.get('/top_albums', (req, res) => {
+    mysqlCon.query(`
+    SELECT  al.name AS album_name, ar.name AS artist_name, sum(si.play_count) AS "sum_of_songs_played"
+    FROM albums al
+    JOIN artists ar
+    ON ar.id = al.artist_id
+    JOIN songs s
+    ON al.id = s.album_id
+    JOIN song_interactions si
+    ON si.song_id = s.id
+    GROUP BY al.id
+    ORDER BY sum(si.play_count) desc
+    LIMIT 10`,
+        (err, results, fields) => {
+            if (err) {
+                res.send(err.message);
+            };
+            res.json(results);
+        }
+    );
+});
+
+app.get('/top_artists', (req, res) => {
+    mysqlCon.query(`
+    SELECT ar.name, SUM(si.play_count) AS "sum_of_songs_played"
+    FROM artists ar
+    JOIN songs s
+    ON ar.id = s.artist_id
+    JOIN song_interactions si
+    ON si.song_id = s.id
+    GROUP BY ar.id
+    ORDER BY SUM(si.play_count) desc
+    LIMIT 5`,
+        (err, results, fields) => {
+            if (err) {
+                res.send(err.message);
+            };
+            res.json(results);
+        }
+    );
+});
+
+app.get('/top_playlist', (req, res) => {
+    mysqlCon.query(`
+    SELECT p.*, SUM(si.play_count) AS "sum_of_songs_played"
+    FROM playlists p
+    JOIN songs_in_playlists sip
+    ON p.id = sip.playlist_id
+    JOIN song_interactions si
+    ON si.song_id = sip.song_id
+    GROUP BY p.id
+    ORDER BY SUM(si.play_count) desc
+    LIMIT 5;`,
         (err, results, fields) => {
             if (err) {
                 res.send(err.message);
@@ -36,7 +103,8 @@ app.get('/songs', (req, res) => {
 });
 
 app.get('/songs/:id', (req, res) => {
-    mysqlCon.query(`SELECT s.id, s.title, s.length, s.track_number, s.created_at, s.uploaded_at, al.name AS "Album Name", ar.name AS "Artist Name"
+    mysqlCon.query(`
+    SELECT s.id, s.title, s.length, s.track_number, s.created_at, s.uploaded_at, al.name AS "album_Name", ar.name AS "artist_name"
     FROM songs s
     JOIN albums al
     ON al.id = s.album_id
@@ -55,7 +123,7 @@ app.get('/songs/:id', (req, res) => {
 });
 
 app.get('/albums/:id', (req, res) => {
-    mysqlCon.query(`SELECT al.*, COUNT(s.id) AS "songs in album"
+    mysqlCon.query(`SELECT al.*, COUNT(s.id) AS "songs_in_album"
     FROM albums al
     JOIN artists ar
     ON ar.id = al.artist_id
@@ -74,7 +142,7 @@ app.get('/albums/:id', (req, res) => {
 });
 
 app.get('/artists/:id', (req, res) => {
-    mysqlCon.query(`SELECT ar.*, COUNT(al.id) AS "albums by artist"
+    mysqlCon.query(`SELECT ar.*, COUNT(al.id) AS "albums_by_artist"
     FROM artists ar
     JOIN albums al
     ON ar.id = al.artist_id
@@ -91,7 +159,7 @@ app.get('/artists/:id', (req, res) => {
 });
 
 app.get('/playlists/:id', (req, res) => {
-    mysqlCon.query(`SELECT p.*, count(sip.song_id) AS "songs in play list"
+    mysqlCon.query(`SELECT p.*, count(sip.song_id) AS "songs_in_playlist"
     FROM playlists p
     JOIN songs_in_playlists sip
     ON p.id = sip.playlist_id
