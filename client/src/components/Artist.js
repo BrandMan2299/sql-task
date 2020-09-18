@@ -19,7 +19,7 @@ function Artist(props) {
                         <div><b>Uploaded at:</b>{artist.info.uploaded_at}</div>
                     </div>
                     <div className="listOfSongs">
-                        <ul><List listOfSongs={artist.listOfSongs} /></ul>
+                        <List listOfSongs={artist.listOfSongs} type="artist" id={artist.info.id} />
                     </div>
                 </div>
             ) : null}

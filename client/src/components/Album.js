@@ -19,7 +19,7 @@ function Album(props) {
                         <div><b>Uploaded at:</b>{album.info.uploaded_at}</div>
                     </div>
                     <div className="listOfSongs">
-                        <ul><List listOfSongs={album.listOfSongs} /></ul>
+                        <List listOfSongs={album.listOfSongs} type="album" id={album.info.id} />
                     </div>
                 </div>
             ) : null}

@@ -104,7 +104,7 @@ app.get('/top_playlists', (req, res) => {
 
 app.get('/songs/:id', (req, res) => {
     mysqlCon.query(`
-    SELECT s.*, al.name AS "album_Name", ar.name AS "artist_name"
+    SELECT s.*, al.name AS "album_name", ar.name AS "artist_name"
     FROM songs s
     JOIN albums al
     ON al.id = s.album_id
@@ -118,12 +118,12 @@ app.get('/songs/:id', (req, res) => {
             else if (!results[0]) {
                 return res.send("no songs found");
             }
-            res.json(results);
+            res.json(...results);
         });
 });
 
 app.get('/albums/:id', (req, res) => {
-    mysqlCon.query(`SELECT al.*, ar.name AS "artist_name" COUNT(s.id) AS "songs_in_album"
+    mysqlCon.query(`SELECT al.*, ar.name AS "artist_name" ,COUNT(s.id) AS "songs_in_album"
     FROM albums al
     JOIN artists ar
     ON ar.id = al.artist_id

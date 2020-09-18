@@ -19,7 +19,7 @@ function Playlist(props) {
                         <div><b>Uploaded at:</b>{playlist.info.uploaded_at}</div>
                     </div>
                     <div className="listOfSongs">
-                        <ul><List listOfSongs={playlist.listOfSongs} type="playlist" id={playlist.info.id} /></ul>
+                        <List listOfSongs={playlist.listOfSongs} type="playlist" id={playlist.info.id} />
                     </div>
                 </div>
             ) : null}

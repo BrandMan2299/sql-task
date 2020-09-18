@@ -1,26 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import List from './List';
+import { Link } from 'react-router-dom';
 
 function Song(props) {
     const [song, setSong] = useState({});
     const [origin, setOrigin] = useState({});
+    const query = props.location.search.slice(1).split('=');
     useEffect(() => {
         axios.get(`/songs/${props.match.params.id}`).then(song => {
             setSong(song.data);
         })
-        const query = props.location.search.slice(1).split('=');
         axios.get(`/${query[0]}s/${query[1]}`).then(origin => {
             setOrigin(origin.data);
         })
     }, [])
     return (
         <div className="viewer">
-            <h1>Hello</h1>
-            {song.info ? (
+            {song.title ? (
                 <div>
-                    {`name, artist_name,album,youtube_iframe,length,lyrics`}
+                    <div><b>Title:</b>{song.title}</div>
+                    <div><Link to={`/artist/${song.artist_id}`}><b>Artist:</b>{song.artist_name}</Link></div>
+                    <Link to={`/album/${song.album_id}`}><b>Album:</b>{song.album_name}</Link>
+                    <iframe width="560" height="315" src={song.youtube_link} frameBorder="0" allowFullScreen></iframe>
+                    <div><b>Length:</b>{song.length}</div>
+                    <div><b>Lyrics:</b>{song.lyrics}</div>
                 </div>
+            ) : null}
+            {origin.listOfSongs ? (
+                <List listOfSongs={origin.listOfSongs} type={query[0]} id={query[1]} />
             ) : null}
         </div>
     );

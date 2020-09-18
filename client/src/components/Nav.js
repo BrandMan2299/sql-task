@@ -5,14 +5,7 @@ function Nav() {
     return (
         <nav>
             <h3>Nav</h3>
-            <ul>
-                <Link to='/'>
-                    <li>Home</li>
-                </Link>
-                <Link to='/shop'>
-                    <li>Shop</li>
-                </Link>
-            </ul>
+            <Link to='/'>Home</Link>
         </nav>
     );
 }
