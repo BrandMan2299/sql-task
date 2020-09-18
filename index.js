@@ -20,7 +20,7 @@ mysqlCon.connect(err => {
 
 app.get('/top_songs', (req, res) => {
     mysqlCon.query(`
-    SELECT s.id, s.title, s.length, s.track_number, s.created_at, s.uploaded_at, al.name AS album_name, ar.name AS artist_name,sum(si.play_count) AS times_played
+    SELECT s.*, al.name AS album_name, ar.name AS artist_name, al.cover_img, sum(si.play_count) AS times_played
     FROM songs s
     JOIN albums al
     ON al.id = s.album_id
@@ -42,7 +42,7 @@ app.get('/top_songs', (req, res) => {
 
 app.get('/top_albums', (req, res) => {
     mysqlCon.query(`
-    SELECT  al.name AS album_name, ar.name AS artist_name, sum(si.play_count) AS "sum_of_songs_played"
+    SELECT  al.*, ar.name AS artist_name, sum(si.play_count) AS "sum_of_songs_played"
     FROM albums al
     JOIN artists ar
     ON ar.id = al.artist_id
@@ -64,7 +64,7 @@ app.get('/top_albums', (req, res) => {
 
 app.get('/top_artists', (req, res) => {
     mysqlCon.query(`
-    SELECT ar.name, SUM(si.play_count) AS "sum_of_songs_played"
+    SELECT ar.*, SUM(si.play_count) AS "sum_of_songs_played"
     FROM artists ar
     JOIN songs s
     ON ar.id = s.artist_id
@@ -82,7 +82,7 @@ app.get('/top_artists', (req, res) => {
     );
 });
 
-app.get('/top_playlist', (req, res) => {
+app.get('/top_playlists', (req, res) => {
     mysqlCon.query(`
     SELECT p.*, SUM(si.play_count) AS "sum_of_songs_played"
     FROM playlists p
@@ -92,7 +92,7 @@ app.get('/top_playlist', (req, res) => {
     ON si.song_id = sip.song_id
     GROUP BY p.id
     ORDER BY SUM(si.play_count) desc
-    LIMIT 5;`,
+    LIMIT 5`,
         (err, results, fields) => {
             if (err) {
                 res.send(err.message);
@@ -104,7 +104,7 @@ app.get('/top_playlist', (req, res) => {
 
 app.get('/songs/:id', (req, res) => {
     mysqlCon.query(`
-    SELECT s.id, s.title, s.length, s.track_number, s.created_at, s.uploaded_at, al.name AS "album_Name", ar.name AS "artist_name"
+    SELECT s.*, al.name AS "album_Name", ar.name AS "artist_name"
     FROM songs s
     JOIN albums al
     ON al.id = s.album_id
@@ -123,21 +123,25 @@ app.get('/songs/:id', (req, res) => {
 });
 
 app.get('/albums/:id', (req, res) => {
-    mysqlCon.query(`SELECT al.*, COUNT(s.id) AS "songs_in_album"
+    mysqlCon.query(`SELECT al.*, ar.name AS "artist_name" COUNT(s.id) AS "songs_in_album"
     FROM albums al
     JOIN artists ar
     ON ar.id = al.artist_id
     JOIN songs s
     ON al.id = s.album_id
     WHERE al.id = ${req.params.id}`,
-        (err, results, fields) => {
+        (err, album, fields) => {
             if (err) {
                 res.send(err.message);
             }
-            else if (!results[0]) {
-                return res.send("no albums found");
-            }
-            res.json(results);
+            mysqlCon.query(`SELECT * 
+                FROM songs
+                WHERE album_id=${req.params.id}`, (err, listOfSongs, fields) => {
+                if (err) {
+                    res.send(err.message);
+                }
+                res.json({ info: album[0], listOfSongs });
+            })
         });
 });
 
@@ -147,14 +151,18 @@ app.get('/artists/:id', (req, res) => {
     JOIN albums al
     ON ar.id = al.artist_id
     WHERE ar.id = ${req.params.id}`,
-        (err, results, fields) => {
+        (err, artist, fields) => {
             if (err) {
                 res.send(err.message);
             }
-            else if (!results[0]) {
-                return res.send("no artist found");
-            }
-            res.json(results);
+            mysqlCon.query(`SELECT * 
+                FROM songs
+                WHERE artist_id=${req.params.id}`, (err, listOfSongs, fields) => {
+                if (err) {
+                    res.send(err.message);
+                }
+                res.json({ info: artist[0], listOfSongs });
+            })
         });
 });
 
@@ -164,14 +172,24 @@ app.get('/playlists/:id', (req, res) => {
     JOIN songs_in_playlists sip
     ON p.id = sip.playlist_id
     WHERE p.id = ${req.params.id}`,
-        (err, results, fields) => {
+        (err, playlist, fields) => {
             if (err) {
                 res.send(err.message);
             }
-            else if (!results[0]) {
-                return res.send("no playlist found");
-            }
-            res.json(results);
+            mysqlCon.query(`SELECT s.*, al.name AS "album_name", ar.name AS "artist_name"
+            FROM songs_in_playlists sip
+            JOIN songs s
+            ON s.id = sip.song_id
+            JOIN albums al
+            ON al.id = s.album_id
+            JOIN artists ar
+            ON ar.id = s.artist_id
+            WHERE sip.playlist_id=${req.params.id}`, (err, listOfSongs, fields) => {
+                if (err) {
+                    res.send(err.message);
+                }
+                res.json({ info: playlist[0], listOfSongs });
+            })
         });
 });
 

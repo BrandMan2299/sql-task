@@ -1,0 +1,18 @@
+.App{
+  text-align: center;
+}
+.rail{
+  display: flex;
+  flex-direction: row;
+}
+.info{
+  width: 18%;
+  padding: 20px;
+}
+.details{
+  display: flex;
+  flex-direction: row-reverse;
+}
+nav{
+  background-color: dimgrey;
+}
