@@ -8,13 +8,13 @@ function Artist(props) {
         axios.get(`/artists/${props.match.params.id}`).then(artist => {
             setArtist(artist.data);
         })
-    }, [])
+    }, [props.match.params.id])
     return (
         <div className="viewer">
             {artist.info ? (
                 <div>
                     <div className="details">
-                        <img src={artist.info.cover_img} />
+                        <img src={artist.info.cover_img} alt="ArtistImg" />
                         <div><b>Artist name:</b>{artist.info.name}</div>
                         <div><b>Uploaded at:</b>{artist.info.uploaded_at}</div>
                     </div>

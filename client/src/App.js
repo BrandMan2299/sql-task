@@ -7,6 +7,7 @@ import Home from './components/Home';
 import Album from './components/Album';
 import Artist from './components/Artist';
 import Song from './components/Song';
+import Error from './components/Error';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/album/:id" component={Album} />
           <Route path="/song/:id" component={Song} />
           <Route path="/playlist/:id" component={Playlist} />
+          <Route component={Error} />
         </Switch>
       </BrowserRouter>
     </div>

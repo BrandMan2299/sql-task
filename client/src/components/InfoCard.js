@@ -5,10 +5,10 @@ function InfoCard(props) {
     return (
         <Link to={props.link} className="info">
             <div className="infoCard">
-                <img src={props.img} />
+                <img src={props.img} alt="img" />
                 <div>{props.content}</div>
-                {props.extraInfo.map(info => (
-                    <div>
+                {props.extraInfo.map((info, i) => (
+                    <div key={i}>
                         {info}
                     </div>
                 ))}

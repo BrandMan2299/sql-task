@@ -8,13 +8,13 @@ function Playlist(props) {
         axios.get(`/playlists/${props.match.params.id}`).then(playlist => {
             setPlaylist(playlist.data);
         })
-    }, [])
+    }, [props.match.params.id])
     return (
         <div className="viewer">
             {playlist.info ? (
                 <div>
                     <div className="details">
-                        <img src={playlist.info.cover_img} />
+                        <img src={playlist.info.cover_img} alt="PlaylistImg" />
                         <div><b>Playlist name:</b>{playlist.info.name}</div>
                         <div><b>Uploaded at:</b>{playlist.info.uploaded_at}</div>
                     </div>

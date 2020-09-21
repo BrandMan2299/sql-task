@@ -4,7 +4,7 @@ import "./Carusele.css";
 
 export default function Carousela(props) {
     const [curStep, setStep] = useState(0);
-    const { Template, data, count, step } = props; //Tenplate = how to show (a component that handles your data), data = what to show(array), count= How many to show(int), step = how many to slide
+    const { Template, data, count, step } = props; //Template = how to show (a component that handles your data), data = what to show(array), count= How many to show(int), step = how many to slide
     const maxStep = useMemo(() => data.length - count, [data, count]);
 
     const slide = (steps) => {
@@ -13,11 +13,11 @@ export default function Carousela(props) {
     };
 
     return (
-        <div id="carousela-container">
+        <div className="carousela-container" id={props.id}>
             <div className="carousela-button" onClick={() => slide(-step)}>
                 {<BiLeftArrow />}
             </div>
-            <div id="surface">
+            <div className="surface">
                 {data
                     .slice(curStep, curStep + count)
                     .map(d => Template(d))}
