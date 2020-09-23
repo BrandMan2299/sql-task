@@ -12,13 +12,16 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "sequelize-cli": "^6.2.0"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mysql": "^2.18.1",
-    "react-icons": "^3.11.0"
+    "mysql2": "^2.2.5",
+    "react-icons": "^3.11.0",
+    "sequelize": "^6.3.5"
   }
 }
