@@ -4,7 +4,9 @@ const { Artist } = require('../models');
 const router = Router();
 
 router.get('/', async (req, res) => {
-    const allArtists = await Artist.findAll();
+    const allArtists = await Artist.findAll({
+        include: ['Songs', 'Albums']
+    });
     res.json(allArtists)
 })
 
