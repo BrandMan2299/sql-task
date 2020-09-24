@@ -1,0 +1,9 @@
+GET http://localhost:8080/api/songs/3
+ 
+PUT  http://localhost:8080/api/songs/3
+Content-Type: application/json
+
+    {
+        "artistId": 1,
+        "name": "para"
+    }

@@ -1,3 +1,0 @@
-GET http://localhost:8080/api/songs
-
-GET http://localhost:3001/artists/1
