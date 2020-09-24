@@ -11,20 +11,20 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      albumId: {
+      album_id: {
         type: Sequelize.INTEGER
       },
-      artistId: {
+      artist_id: {
         type: Sequelize.INTEGER
       },
-      youtubeLink: {
+      youtube_link: {
         type: Sequelize.STRING
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }

@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('/', async (req, res) => {
     const allSongs = await Song.findAll({
-        include: ['Album', 'Artist', { model: Playlist }]
+        include: ['Album', 'Artist', { model: Playlist, attributes: ['name'] }]
     });
     res.json(allSongs)
 })

@@ -11,17 +11,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      songId: {
+      song_id: {
         type: Sequelize.INTEGER
       },
-      playlistId: {
+      playlist_id: {
         type: Sequelize.INTEGER
       },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      uploaded_at: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
         defualtValue: Sequelize.NOW
