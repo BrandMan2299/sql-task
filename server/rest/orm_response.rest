@@ -1,9 +1,9 @@
-GET http://localhost:8080/api/songs/3
+GET http://localhost:8080/api/albums
  
-PUT  http://localhost:8080/api/songs/3
+POST http://localhost:8080/api/albums
 Content-Type: application/json
 
     {
         "artistId": 1,
-        "name": "para"
+        "name": "shooting stars"
     }
