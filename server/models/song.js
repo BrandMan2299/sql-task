@@ -18,7 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       });
       this.belongsToMany(models.Playlist, {
         through: models.Songs_in_playlist,
-        foreignKey: 'playlistId'
+        foreignKey: 'songId'
+      });
+      this.belongsToMany(models.User, {
+        through: models.Song_interactions,
+        foreignKey: 'userId'
       })
     }
   };
@@ -26,7 +30,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     albumId: DataTypes.INTEGER,
     artistId: DataTypes.INTEGER,
-    youtubeLink: DataTypes.STRING
+    youtubeLink: DataTypes.STRING,
+    playCount: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Song',

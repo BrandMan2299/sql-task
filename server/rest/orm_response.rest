@@ -1,4 +1,4 @@
-GET http://localhost:8080/api/albums
+GET http://localhost:8080/api/top/songs
  
 POST http://localhost:8080/api/albums
 Content-Type: application/json
